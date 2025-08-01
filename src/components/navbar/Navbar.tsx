@@ -9,7 +9,7 @@ export default function Navbar() {
   const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
 
   return (
-    <nav className="bg-[#DC143C] shadow-md sticky top-0 left-0 right-0 z-50">
+    <nav className="bg-[#DC143C] shadow-md sticky top-0 z-40">
       <div className="sm:w-11/12 mx-auto max-sm:px-2 py-3">
         <div className="flex items-center justify-between">
           {/* Left: Website name */}
