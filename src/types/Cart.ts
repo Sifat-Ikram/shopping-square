@@ -1,8 +1,5 @@
-export default interface Cart {
-  id: string;
-  title: string;
-  price: number;
-  quantity: number;
-  category: string;
-  image: string;
-}
+import Product from "./Product";
+
+type CartItem = Product & { quantity: number };
+
+export default CartItem;

@@ -2,10 +2,14 @@
 import { useProducts } from "@/lib/hooks/useProducts";
 import Product from "@/types/Product";
 import Image from "next/image";
-import { AnimatePresence, motion } from "framer-motion";
+import { motion } from "framer-motion";
 import { notFound } from "next/navigation";
 import { FaRegStar, FaStar, FaStarHalfAlt } from "react-icons/fa";
 import { useState } from "react";
+import { addToCart } from "../../lib/redux/slices/cartSlice";
+import { useDispatch } from "react-redux";
+import Cart from "@/types/Cart";
+import CartSidebar from "../cart/Cart";
 
 interface ProductDetailProps {
   slug: string;
@@ -16,7 +20,9 @@ const ProductDetailPage = ({ slug, initialProducts }: ProductDetailProps) => {
   const { products, isLoading, isError } = useProducts({
     initialData: initialProducts,
   });
-  const [isZoomed, setIsZoomed] = useState(false);
+  const dispatch = useDispatch();
+  const [zoomStyle, setZoomStyle] = useState({});
+  const [isCartOpen, setIsCartOpen] = useState(false);
   const product = products?.find(
     (p) =>
       p.title
@@ -42,6 +48,40 @@ const ProductDetailPage = ({ slug, initialProducts }: ProductDetailProps) => {
   if (isLoading) return <div className="p-4 text-center">Loading...</div>;
   if (isError || !product) return notFound();
 
+  const handleMouseMove = (
+    e: React.MouseEvent<HTMLImageElement, MouseEvent>
+  ) => {
+    const { left, top, width, height } =
+      e.currentTarget.getBoundingClientRect();
+    const x = ((e.clientX - left) / width) * 100;
+    const y = ((e.clientY - top) / height) * 100;
+
+    setZoomStyle({
+      transform: `scale(1.7)`,
+      transformOrigin: `${x}% ${y}%`,
+    });
+  };
+
+  const handleMouseLeave = () => {
+    setZoomStyle({
+      transform: "scale(1)",
+    });
+  };
+
+  const handleAddToCart = () => {
+    dispatch(
+      addToCart({
+        id: product.id,
+        title: product.title,
+        price: product.price,
+        quantity: 1,
+        category: product?.category,
+        image: product.image,
+      } as Cart)
+    );
+    setIsCartOpen(true);
+  };
+
   return (
     <motion.div
       className="max-w-6xl mx-auto px-4 py-8 space-y-8"
@@ -49,48 +89,26 @@ const ProductDetailPage = ({ slug, initialProducts }: ProductDetailProps) => {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4, ease: "easeOut" }}
     >
-      <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-[#DC143C] text-center">
-        {product.title}
-      </h1>
-
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
         {/* Product Image */}
-        <motion.div
-          className="relative w-full aspect-[4/3] bg-gray-50 rounded-xl overflow-hidden"
-          initial={{ scale: 0.95 }}
-          animate={{ scale: 1 }}
-          transition={{ delay: 0.2, duration: 0.3 }}
-        >
-          <Image
-            src={product.image}
-            alt={product.title}
-            fill
-            className="object-contain p-4"
-            priority
-          />
+        <motion.div className="relative w-full aspect-[4/3] bg-gray-50 rounded-xl overflow-hidden">
+          <motion.div
+            whileHover={{ scale: 1.2 }}
+            transition={{ duration: 0.4, ease: "easeInOut" }}
+            className="w-full h-full relative"
+          >
+            <Image
+              src={product.image}
+              alt={product.title}
+              fill
+              className="object-contain p-4"
+              priority
+              style={zoomStyle}
+              onMouseMove={handleMouseMove}
+              onMouseLeave={handleMouseLeave}
+            />
+          </motion.div>
         </motion.div>
-
-        <AnimatePresence>
-          {isZoomed && (
-            <motion.div
-              className="fixed inset-0 bg-black bg-opacity-90 z-50 flex items-center justify-center cursor-zoom-out"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              onClick={() => setIsZoomed(false)}
-            >
-              <motion.img
-                src={product.image}
-                alt={product.title}
-                className="max-w-full max-h-full object-contain"
-                initial={{ scale: 0.8 }}
-                animate={{ scale: 1 }}
-                exit={{ scale: 0.8 }}
-                transition={{ duration: 0.3 }}
-              />
-            </motion.div>
-          )}
-        </AnimatePresence>
 
         {/* Product Info */}
         <motion.div
@@ -99,6 +117,9 @@ const ProductDetailPage = ({ slug, initialProducts }: ProductDetailProps) => {
           animate={{ opacity: 1, x: 0 }}
           transition={{ delay: 0.2, duration: 0.4 }}
         >
+          <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-[#DC143C]">
+            {product.title}
+          </h1>
           <p className="text-xl font-bold text-[#DC143C]">
             BDT {product.price.toFixed(2)}
           </p>
@@ -118,15 +139,25 @@ const ProductDetailPage = ({ slug, initialProducts }: ProductDetailProps) => {
 
           {/* Call-to-Action Buttons (optional future use) */}
           <div className="pt-4 flex flex-col sm:flex-row gap-3">
-            <button className="bg-[#DC143C] text-white px-5 py-2 rounded-lg hover:bg-red-700 transition-all text-sm sm:text-base">
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              transition={{ type: "spring", stiffness: 300 }}
+              onClick={handleAddToCart}
+              className="bg-[#DC143C] cursor-pointer text-white px-5 py-2 rounded-lg hover:bg-red-700 transition-colors text-sm sm:text-base"
+            >
               Add to Cart
-            </button>
-            <button className="border border-[#DC143C] text-[#DC143C] px-5 py-2 rounded-lg hover:bg-[#DC143C]/10 transition-all text-sm sm:text-base">
-              Buy Now
-            </button>
+            </motion.button>
           </div>
         </motion.div>
       </div>
+      <CartSidebar isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} />
+      {isCartOpen && (
+        <div
+          onClick={() => setIsCartOpen(false)}
+          className="fixed inset-0 bg-black/30 z-40"
+        />
+      )}
     </motion.div>
   );
 };

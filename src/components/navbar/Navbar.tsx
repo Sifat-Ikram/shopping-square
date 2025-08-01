@@ -4,9 +4,11 @@ import Link from "next/link";
 import { useState } from "react";
 import { FiShoppingCart, FiSearch } from "react-icons/fi";
 import { motion, AnimatePresence } from "framer-motion";
+import CartSidebar from "../cart/Cart";
 
 export default function Navbar() {
   const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
+  const [isCartOpen, setIsCartOpen] = useState(false);
 
   return (
     <nav className="bg-[#DC143C] shadow-md sticky top-0 z-40">
@@ -38,13 +40,13 @@ export default function Navbar() {
             </button>
 
             {/* Cart icon */}
-            <Link
-              href={"/cart"}
+            <button
+              onClick={() => setIsCartOpen(true)}
               className="p-2 rounded-md hover:text-gray-400 transition"
               aria-label="Cart"
             >
               <FiShoppingCart size={24} color="white" />
-            </Link>
+            </button>
           </div>
         </div>
 
@@ -67,6 +69,13 @@ export default function Navbar() {
           )}
         </AnimatePresence>
       </div>
+      <CartSidebar isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} />
+      {isCartOpen && (
+        <div
+          onClick={() => setIsCartOpen(false)}
+          className="fixed inset-0 bg-black/30 z-40"
+        />
+      )}
     </nav>
   );
 }
