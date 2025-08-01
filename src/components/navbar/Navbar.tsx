@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { FiShoppingCart, FiSearch } from "react-icons/fi";
+import { FiShoppingCart, FiSearch, FiShoppingBag } from "react-icons/fi";
 import { motion, AnimatePresence } from "framer-motion";
 import CartSidebar from "../cart/Cart";
 
@@ -24,7 +24,7 @@ export default function Navbar() {
             <input
               type="search"
               placeholder="Search products..."
-              className="w-full border border-white bg-[#DC143C] text-white placeholder-white rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-white transition"
+              className="w-full border border-white bg-[#DC143C] text-white placeholder-white rounded-xl px-4 py-2 focus:outline-none focus:ring-2 focus:ring-white transition"
             />
           </div>
 
@@ -39,14 +39,23 @@ export default function Navbar() {
               <FiSearch size={24} color="white" />
             </button>
 
-            {/* Cart icon */}
-            <button
-              onClick={() => setIsCartOpen(true)}
-              className="p-2 rounded-md hover:text-gray-400 transition"
-              aria-label="Cart"
-            >
-              <FiShoppingCart size={24} color="white" />
-            </button>
+            <div className="flex items-center gap-3">
+              <button
+                onClick={() => setIsCartOpen(true)}
+                className="p-2 rounded-md cursor-pointer hover:text-gray-400 transition"
+                aria-label="Cart"
+              >
+                <FiShoppingCart size={24} color="white" />
+              </button>
+              <Link href={"/order"}>
+                <button
+                  className="p-2 rounded-md cursor-pointer hover:text-gray-400 transition"
+                  aria-label="Order"
+                >
+                  <FiShoppingBag size={24} color="white" />
+                </button>
+              </Link>
+            </div>
           </div>
         </div>
 

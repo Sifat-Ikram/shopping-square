@@ -144,7 +144,7 @@ const ProductDetailPage = ({ slug, initialProducts }: ProductDetailProps) => {
               whileTap={{ scale: 0.95 }}
               transition={{ type: "spring", stiffness: 300 }}
               onClick={handleAddToCart}
-              className="bg-[#DC143C] cursor-pointer text-white px-5 py-2 rounded-lg hover:bg-red-700 transition-colors text-sm sm:text-base"
+              className="bg-[#DC143C] cursor-pointer text-white px-5 py-2 rounded-xl hover:bg-[#c11235] transition-colors text-sm sm:text-base"
             >
               Add to Cart
             </motion.button>

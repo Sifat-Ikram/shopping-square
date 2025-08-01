@@ -12,6 +12,7 @@ import {
 } from "@/lib/redux/slices/cartSlice";
 import { FaTrash } from "react-icons/fa";
 import { checkoutItems } from "@/lib/redux/slices/checkoutSlice";
+import Link from "next/link";
 
 interface CartSidebarProps {
   isOpen: boolean;
@@ -72,7 +73,7 @@ const CartSidebar = ({ isOpen, onClose }: CartSidebarProps) => {
                   <button
                     type="button"
                     onClick={() => dispatch(removeFromCart(item.id))}
-                    className="text-[#DC143C] transition flex-shrink-0"
+                    className="text-[#DC143C] cursor-pointer transition flex-shrink-0"
                     aria-label="Remove item"
                   >
                     <FaTrash size={14} />
@@ -127,13 +128,15 @@ const CartSidebar = ({ isOpen, onClose }: CartSidebarProps) => {
             </span>
           </p>
 
-          <button
-            type="button"
-            onClick={() => dispatch(checkoutItems(items))}
-            className="w-full bg-[#DC143C] hover:bg-red-700 text-white py-3 rounded-lg font-semibold text-base transition"
-          >
-            Proceed to Checkout
-          </button>
+          <Link href={"/checkout"}>
+            <button
+              type="button"
+              onClick={() => dispatch(checkoutItems(items))}
+              className="w-full bg-[#DC143C] hover:bg-[#c11235] cursor-pointer text-white py-3 rounded-xl font-semibold text-base transition"
+            >
+              Proceed to Checkout
+            </button>
+          </Link>
         </div>
       )}
     </motion.aside>
