@@ -1,12 +1,13 @@
 "use client";
 
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import FilterSidebar, { Filters } from "./FilterSidebar";
 import Product from "@/types/Product";
 import { useProducts } from "@/lib/hooks/useProducts";
 import { FaBars } from "react-icons/fa";
 import { AnimatePresence, motion } from "framer-motion";
 import ProductCard from "./ProductCard";
+import { useSearchParams } from "next/navigation";
 
 interface ProductListProps {
   initialProducts: Product[];
@@ -19,7 +20,8 @@ const ProductList: React.FC<ProductListProps> = ({ initialProducts }) => {
     isLoading,
     isError,
   } = useProducts({ initialData: initialProducts });
-
+  const searchParams = useSearchParams();
+  const searchQuery = searchParams.get("search")?.toLowerCase() || "";
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
   // Filter state managed here (can also lift up if needed)
@@ -35,6 +37,12 @@ const ProductList: React.FC<ProductListProps> = ({ initialProducts }) => {
     const set = new Set(products?.map((p) => p.category));
     return Array.from(set);
   }, [products]);
+
+  useEffect(() => {
+    if (searchQuery) {
+      setFilters((prev) => ({ ...prev, title: searchQuery }));
+    }
+  }, [searchQuery]);
 
   // Filter products based on filters
   const filteredProducts = useMemo(() => {
@@ -130,7 +138,7 @@ const ProductList: React.FC<ProductListProps> = ({ initialProducts }) => {
         </div>
 
         {/* Product Grid */}
-        <div className="flex flex-col space-y-8 p-1 sm:p-2 md:p-3 lg:p-5">
+        <div className="flex-1 flex flex-col space-y-8 p-1 sm:p-2 md:p-3 lg:p-5">
           <h1 className="text-base sm:text-xl md:text-2xl lg:text-3xl font-semibold text-[#DC143C]">
             Featured Products
           </h1>

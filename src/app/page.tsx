@@ -1,6 +1,7 @@
 import ProductList from "@/components/productPage/ProductList";
 import Product from "@/types/Product";
 import { Metadata } from "next";
+import { Suspense } from "react";
 
 export const metadata: Metadata = {
   title: "Online Shopping Store | Shopping Square",
@@ -18,10 +19,10 @@ export const metadata: Metadata = {
     title: "Shopping Square | Your One-Stop Online Store",
     description:
       "Discover top-quality products at unbeatable prices. Shop now at Shopping Square!",
-    url: "http://localhost:3000",
+    url: "https://shopping-square.vercel.app",
     siteName: "Shopping Square",
     type: "website",
-  }
+  },
 };
 
 const fetchProducts = async (): Promise<Product[]> => {
@@ -45,7 +46,9 @@ export default async function Home() {
           trends.
         </p>
       </div>
-      <ProductList initialProducts={products} />
+      <Suspense fallback={<p className="text-center">Loading products...</p>}>
+        <ProductList initialProducts={products} />
+      </Suspense>
     </main>
   );
 }

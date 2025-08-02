@@ -13,6 +13,8 @@ import {
 import { FaTrash } from "react-icons/fa";
 import { checkoutItems } from "@/lib/redux/slices/checkoutSlice";
 import Link from "next/link";
+import Cart from "@/types/Cart";
+import Product from "@/types/Product";
 
 interface CartSidebarProps {
   isOpen: boolean;
@@ -21,7 +23,7 @@ interface CartSidebarProps {
 
 const CartSidebar = ({ isOpen, onClose }: CartSidebarProps) => {
   const dispatch = useDispatch();
-  const items = useSelector(selectCartItems);
+  const items: Cart[] = useSelector(selectCartItems);
 
   return (
     <motion.aside
@@ -131,7 +133,11 @@ const CartSidebar = ({ isOpen, onClose }: CartSidebarProps) => {
           <Link href={"/checkout"}>
             <button
               type="button"
-              onClick={() => dispatch(checkoutItems(items))}
+              onClick={() =>
+                dispatch(
+                  checkoutItems(items as (Product & { quantity: number })[])
+                )
+              }
               className="w-full bg-[#DC143C] hover:bg-[#c11235] cursor-pointer text-white py-3 rounded-xl font-semibold text-base transition"
             >
               Proceed to Checkout

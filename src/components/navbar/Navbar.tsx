@@ -5,10 +5,20 @@ import { useState } from "react";
 import { FiShoppingCart, FiSearch, FiShoppingBag } from "react-icons/fi";
 import { motion, AnimatePresence } from "framer-motion";
 import CartSidebar from "../cart/Cart";
+import { useRouter } from "next/navigation";
 
 export default function Navbar() {
-  const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
+  const router = useRouter();
+  const [searchTerm, setSearchTerm] = useState("");
   const [isCartOpen, setIsCartOpen] = useState(false);
+  const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
+
+  const handleSearchSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!searchTerm.trim()) return;
+    router.push(`/?search=${encodeURIComponent(searchTerm.trim())}`);
+    setMobileSearchOpen(false);
+  };
 
   return (
     <nav className="bg-[#DC143C] shadow-md sticky top-0 z-40">
@@ -20,13 +30,18 @@ export default function Navbar() {
           </Link>
 
           {/* Middle: Search bar on tablet+, hidden on mobile */}
-          <div className="hidden md:flex flex-grow mx-6 max-w-3xl">
+          <form
+            onSubmit={handleSearchSubmit}
+            className="hidden md:flex flex-grow mx-6 max-w-3xl"
+          >
             <input
               type="search"
               placeholder="Search products..."
-              className="w-full border border-white bg-[#DC143C] text-white placeholder-white rounded-xl px-4 py-2 focus:outline-none focus:ring-2 focus:ring-white transition"
+              className="w-full border border-white bg-white rounded-xl px-4 py-2 focus:outline-none focus:ring-2 focus:ring-white transition"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
             />
-          </div>
+          </form>
 
           {/* Right: Cart icon + search icon */}
           <div className="flex items-center space-x-4">
@@ -63,6 +78,7 @@ export default function Navbar() {
         <AnimatePresence>
           {mobileSearchOpen && (
             <motion.div
+              onSubmit={handleSearchSubmit}
               initial={{ height: 0, opacity: 0 }}
               animate={{ height: "auto", opacity: 1 }}
               exit={{ height: 0, opacity: 0 }}
@@ -71,7 +87,7 @@ export default function Navbar() {
               <input
                 type="search"
                 placeholder="Search products..."
-                className="w-full border border-white bg-[#cc5500] text-white placeholder-white rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-white transition"
+                className="w-full border border-white bg-white rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-white transition"
                 autoFocus
               />
             </motion.div>

@@ -4,7 +4,7 @@ export default interface Order {
   address: string;
   phone: string;
   items: {
-    id: string;
+    id: number;
     title: string;
     price: number;
     quantity: number;

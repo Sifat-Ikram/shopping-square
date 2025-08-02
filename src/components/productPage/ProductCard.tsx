@@ -7,16 +7,9 @@ interface ProductCardProps {
   product: Product;
 }
 
-const generateSlug = (title: string) =>
-  title
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/(^-|-$)/g, "");
-
 const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
-  const slug = generateSlug(product.title);
   return (
-    <motion.div
+    <motion.section
       whileHover={{ y: -6, boxShadow: "0px 12px 32px rgba(0,0,0,0.08)" }}
       transition={{ type: "spring", stiffness: 250, damping: 20 }}
       className="w-full rounded-2xl border border-gray-200 bg-white p-3 sm:p-4 flex flex-col gap-4"
@@ -43,13 +36,13 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
         <p className="text-sm sm:text-base font-medium text-gray-700">
           BDT {product.price.toFixed(2)}
         </p>
-        <Link href={`/products/${slug}`} passHref>
+        <Link href={`/products/${product.id}`}>
           <button className="mt-2 w-fit cursor-pointer px-3 py-1.5 sm:px-4 sm:py-2 rounded-xl border border-[#DC143C] text-[#DC143C] text-xs sm:text-sm hover:bg-[#DC143C] hover:text-white transition-colors duration-200">
             View Details
           </button>
         </Link>
       </div>
-    </motion.div>
+    </motion.section>
   );
 };
 

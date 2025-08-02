@@ -1,7 +1,7 @@
-import Product from "./Product";
+import Cart from "./Cart";
 
 interface Checkout {
-  items: (Product & { quantity: number })[];
+  items: Cart[];
   totalAmount: number;
   date: string;
 }

@@ -45,19 +45,21 @@ export default function CheckoutPage() {
     );
 
     Swal.fire({
+      position: "top-end",
       icon: "success",
-      title: "Order Placed",
+      title: "Thank you",
       text: "Your order has been placed successfully!",
-      confirmButtonColor: "#DC143C",
+      showConfirmButton: false,
+      timer: 1500,
     });
-    router.push("/")
     dispatch(clearCart());
     dispatch(clearCheckout());
+    router.push("/");
     reset();
   };
 
   return (
-    <div>
+    <section>
       {cart.length === 0 ? (
         <p className="text-lg font-medium text-center mt-10">
           There is no items in the cart
@@ -79,7 +81,7 @@ export default function CheckoutPage() {
               {cart.map((item) => (
                 <div
                   key={item.id}
-                  className="flex flex-col md:flex-row justify-between items-start md:items-center border-b pb-4"
+                  className="flex flex-col md:flex-row justify-between items-start md:items-center border-b border-gray-400 pb-4"
                 >
                   <div>
                     <p className="text-md font-medium">{item.title}</p>
@@ -88,7 +90,7 @@ export default function CheckoutPage() {
                     </p>
                   </div>
                   <p className="text-[#DC143C] font-semibold">
-                    ${(item.price * item.quantity).toFixed(2)}
+                    {(item.price * item.quantity).toFixed(2)} BDT
                   </p>
                 </div>
               ))}
@@ -187,6 +189,6 @@ export default function CheckoutPage() {
           </motion.form>
         </div>
       )}
-    </div>
+    </section>
   );
 }

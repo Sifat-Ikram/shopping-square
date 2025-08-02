@@ -1,35 +1,21 @@
 "use client";
-import { useProducts } from "@/lib/hooks/useProducts";
 import Product from "@/types/Product";
 import Image from "next/image";
 import { motion } from "framer-motion";
-import { notFound } from "next/navigation";
 import { FaRegStar, FaStar, FaStarHalfAlt } from "react-icons/fa";
 import { useState } from "react";
 import { addToCart } from "../../lib/redux/slices/cartSlice";
 import { useDispatch } from "react-redux";
-import Cart from "@/types/Cart";
 import CartSidebar from "../cart/Cart";
 
 interface ProductDetailProps {
-  slug: string;
-  initialProducts: Product[];
+  product: Product;
 }
 
-const ProductDetailPage = ({ slug, initialProducts }: ProductDetailProps) => {
-  const { products, isLoading, isError } = useProducts({
-    initialData: initialProducts,
-  });
+const ProductDetailPage = ({ product }: ProductDetailProps) => {
   const dispatch = useDispatch();
   const [zoomStyle, setZoomStyle] = useState({});
   const [isCartOpen, setIsCartOpen] = useState(false);
-  const product = products?.find(
-    (p) =>
-      p.title
-        .toLowerCase()
-        .replace(/[^a-z0-9]+/g, "-")
-        .replace(/(^-|-$)/g, "") === slug
-  );
 
   const renderStars = (rate: number) => {
     const stars = [];
@@ -44,9 +30,6 @@ const ProductDetailPage = ({ slug, initialProducts }: ProductDetailProps) => {
     }
     return stars;
   };
-
-  if (isLoading) return <div className="p-4 text-center">Loading...</div>;
-  if (isError || !product) return notFound();
 
   const handleMouseMove = (
     e: React.MouseEvent<HTMLImageElement, MouseEvent>
@@ -75,10 +58,11 @@ const ProductDetailPage = ({ slug, initialProducts }: ProductDetailProps) => {
         title: product.title,
         price: product.price,
         quantity: 1,
-        category: product?.category,
+        category: product.category,
         image: product.image,
-      } as Cart)
+      })
     );
+
     setIsCartOpen(true);
   };
 

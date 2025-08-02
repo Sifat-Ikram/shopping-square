@@ -1,5 +1,6 @@
 import Cart from "@/types/Cart";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { RootState } from "../store";
 
 interface CartState {
   items: Cart[];
@@ -21,16 +22,16 @@ const cartSlice = createSlice({
         state.items.push(action.payload);
       }
     },
-    increaseQuantity(state, action: PayloadAction<string>) {
+    increaseQuantity(state, action: PayloadAction<number>) {
       const item = state.items.find((i) => i.id === action.payload);
       if (item) item.quantity += 1;
     },
-    decreaseQuantity(state, action: PayloadAction<string>) {
+    decreaseQuantity(state, action: PayloadAction<number>) {
       const item = state.items.find((i) => i.id === action.payload);
       if (item && item.quantity > 1) item.quantity -= 1;
     },
 
-    removeFromCart(state, action: PayloadAction<string>) {
+    removeFromCart(state, action: PayloadAction<number>) {
       state.items = state.items.filter((i) => i.id !== action.payload);
     },
     clearCart(state) {
@@ -48,6 +49,6 @@ export const {
 } = cartSlice.actions;
 
 // Selector to get all cart items
-export const selectCartItems = (state: { cart: CartState }) => state.cart.items;
+export const selectCartItems = (state: RootState) => state.cart.items;
 
 export default cartSlice.reducer;
