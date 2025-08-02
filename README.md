@@ -87,7 +87,7 @@ A minimal yet fully functional e-commerce frontend built with **Next.js App Rout
 ### Installation:
 
 ```bash
-git clone https://github.com/yourusername/seo-ecommerce-task.git
+git clone https://github.com/Sifat-Ikram/shopping-square.git
 cd seo-ecommerce-task
 npm install
 # or
